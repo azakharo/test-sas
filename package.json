@@ -10,7 +10,7 @@
     "node": "8.6.0"
   },
   "scripts": {
-    "test": "mocha -- tests/**/*.js"
+    "test": "mocha -- tests/**/*.spec.js"
   },
   "private": true
 }
