@@ -6,11 +6,12 @@ const server = settings.server;
 const auth = require('./auth');
 
 
-describe('media', () => {
+describe('tasks', () => {
 
   let authToken = null;
   let mediaID = null;
   let taskID = null;
+  let taskEtag = null;
 
   before(() => {
     return auth.login()
@@ -44,61 +45,52 @@ describe('media', () => {
           res.body.should.be.an('object');
           res.body.should.have.property('_id');
           taskID = res.body['_id'];
+          taskEtag = res.body['_etag'];
         });
     });
   });
 
-  // describe('/GET media list', () => {
-  //   it('it should GET all the media files', () => {
-  //     return chai.request(server)
-  //       .get('/api/media')
-  //       .set('Authorization', `Bearer ${authToken}`)
-  //       .then((res) => {
-  //         res.should.have.status(200);
-  //         res.should.be.json;
-  //         res.body.should.be.a('array');
-  //         res.body.length.should.be.least(1);
-  //         mediaID = res.body[0].id;
-  //       });
-  //   });
-  // });
-  //
-  // describe('/GET media description', () => {
-  //   it('it should GET media description by the given id', () => {
-  //     return chai.request(server)
-  //       .get('/api/media/' + mediaID + '.json')
-  //       .set('Authorization', `Bearer ${authToken}`)
-  //       .then(res => {
-  //         res.should.have.status(200);
-  //         res.body.should.be.a('object');
-  //         res.body.should.have.property('id');
-  //         res.body.should.have.property('date_created');
-  //         res.body.should.have.property('creator');
-  //         res.body.should.have.property('content-type');
-  //         res.body.should.have.property('title');
-  //       });
-  //   });
-  // });
-  //
-  // describe('/GET media file content', () => {
-  //   it('it should GET media content by the given id', () => {
-  //     return chai.request(server)
-  //       .get('/api/media/' + mediaID)
-  //       .set('Authorization', `Bearer ${authToken}`)
-  //       .then(res => {
-  //         res.should.have.status(200);
-  //       });
-  //   });
-  // });
-  //
-  // describe('/DELETE media', () => {
-  //   it('it should DELETE media by the given id', () => {
-  //     return chai.request(server)
-  //       .delete('/api/media/' + mediaID)
-  //       .set('Authorization', `Bearer ${authToken}`)
-  //       .then(res => {
-  //         res.should.have.status(200);
-  //       });
-  //   });
-  // });
+  describe('/GET task list', () => {
+    it('it should GET all tasks', () => {
+      return chai.request(server)
+        .get('/api/tasks')
+        .set('Authorization', `Bearer ${authToken}`)
+        .then((res) => {
+          res.should.have.status(200);
+          res.should.be.json;
+          res.body.should.have.property('data');
+          let data = res.body.data;
+          data.should.be.a('array');
+          data.length.should.be.least(1);
+        });
+    });
+  });
+
+  describe('/GET task by ID', () => {
+    it('it should GET task by ID', () => {
+      return chai.request(server)
+        .get('/api/tasks/' + taskID)
+        .set('Authorization', `Bearer ${authToken}`)
+        .then(res => {
+          res.should.have.status(200);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.should.have.property('media');
+          res.body.should.have.property('state');
+          res.body.should.have.property('creator');
+        });
+    });
+  });
+
+  describe('/DELETE task', () => {
+    it('it should DELETE task by ID', () => {
+      return chai.request(server)
+        .delete('/api/tasks/' + taskID)
+        .set('Authorization', `Bearer ${authToken}`)
+        .set('If-Match', taskEtag)
+        .then(res => {
+          res.should.have.status(204);
+        });
+    });
+  });
 });

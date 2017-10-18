@@ -64,14 +64,14 @@ describe('media', () => {
     });
   });
 
-  describe('/DELETE media', () => {
-    it('it should DELETE media by the given id', () => {
-      return chai.request(server)
-        .delete('/api/media/' + mediaID)
-        .set('Authorization', `Bearer ${authToken}`)
-        .then(res => {
-          res.should.have.status(200);
-        });
-    });
-  });
+  // describe('/DELETE media', () => {
+  //   it('it should DELETE media by the given id', () => {
+  //     return chai.request(server)
+  //       .delete('/api/media/' + mediaID)
+  //       .set('Authorization', `Bearer ${authToken}`)
+  //       .then(res => {
+  //         res.should.have.status(200);
+  //       });
+  //   });
+  // });
 });
