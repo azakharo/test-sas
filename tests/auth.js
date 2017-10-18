@@ -8,8 +8,8 @@ exports.login = () => {
   return chai.request(server)
     .post('/auth/login')
     .send({
-      username: 'admin',
-      password: 'admin'
+      username: settings.user,
+      password: settings.password
     })
     .then((res) => {
       res.should.have.status(200);
